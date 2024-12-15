@@ -32,7 +32,7 @@ The output is stored in a **DuckDB database** for analytics and visualization.
 ## Installation
 1. Clone this repository:
    ```bash
-   git clone https://github.com/ynanangaa/Projet-ETL-velo-Data-Engineering
+   git clone https://github.com/ynanangaa/Projet-ETL-velo-Data-Engineering.git
    cd Projet-ETL-velo-Data-Engineering
    ```
 
