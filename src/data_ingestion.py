@@ -1,7 +1,9 @@
 import os
 from datetime import datetime
 
+import json
 import requests
+import logging
 
 
 def get_realtime_bicycle_data():
@@ -32,9 +34,16 @@ def get_realtime_bicycle_data():
     ]
 
     for url, file_name in datasets:
-        response = requests.request("GET", url)
-        response.raise_for_status()  # Raise an error for bad status codes
-        serialize_data(response.text, file_name)
+        try:
+            response = requests.request("GET", url)
+            response.raise_for_status()  # Raise an error for bad status codes
+            serialize_data(response.text, file_name)
+        except requests.exceptions.HTTPError as e:
+            if response.status_code == 404:
+                logging.warning(f"{url} not found (404). Creating empty dataset.")
+                serialize_data(json.dumps([]), file_name)  # fichier vide
+            else:
+                raise
 
 
 def get_commune_data():
@@ -62,5 +71,5 @@ def serialize_data(raw_json: str, file_name: str):
     if not os.path.exists(directory):
         os.makedirs(directory)
 
-    with open(f"{directory}/{file_name}", "w") as fd:
+    with open(f"{directory}/{file_name}", "w", encoding="utf-8") as fd:
         fd.write(raw_json)
