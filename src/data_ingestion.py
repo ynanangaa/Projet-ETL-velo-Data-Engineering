@@ -1,10 +1,9 @@
-import os
 from datetime import datetime
-
 import json
-import requests
 import logging
+import os
 
+import requests
 
 def get_realtime_bicycle_data():
     """

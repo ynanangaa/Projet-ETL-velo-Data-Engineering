@@ -1,8 +1,7 @@
-import json
-from datetime import datetime, date
+from datetime import datetime
 import logging
+
 import duckdb
-import pandas as pd
 
 logging.basicConfig(level=logging.INFO)
 
@@ -216,8 +215,6 @@ def consolidate_city_data():
     """)
 
     logging.info("Cities data consolidated successfully")
-
-    #city_data_df.drop_duplicates(inplace=True)
 
 
 def consolidate_station_statement_paris_data():
