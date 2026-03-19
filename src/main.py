@@ -14,6 +14,7 @@ from data_ingestion import (
     get_realtime_bicycle_data,
     get_commune_data,
 )
+from data_visualization import mobility_analysis_dashboard
 
 
 def main():
@@ -41,6 +42,9 @@ def main():
     agregate_fact_station_statements()
     print("Agregate data ended.")
 
+    # data visualization
+    mobility_analysis_dashboard()
+    print("Process ended.")
 
 if __name__ == "__main__":
     main()
