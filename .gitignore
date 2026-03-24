@@ -8,3 +8,7 @@ __pycache__/
 *.pyc
 *.pyo
 *.pyd
+
+# Data files
+duckdb/
+raw_data/
