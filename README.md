@@ -1,107 +1,136 @@
 # Mobility Analysis ETL Pipeline
 
-This project implements an ETL (Extract, Transform, Load) pipeline to process mobility data, specifically focusing on bicycle-sharing systems and related city data. The pipeline ingests real-time bicycle station data, consolidates it into structured tables, and aggregates it for further analysis.
-
-## Table of Contents
-1. [Overview](#overview)
-2. [Project Structure](#project-structure)
-3. [Installation](#installation)
-4. [Usage](#usage)
-5. [ETL Workflow](#etl-workflow)
+This project implements an ETL (Extract, Transform, Load) pipeline to process mobility data from bicycle-sharing systems and expose it through an interactive dashboard.
 
 ---
 
 ## Overview
-This ETL pipeline processes and prepares data for mobility analysis by:
-- **Ingesting** real-time data from APIs and static sources.
-- **Consolidating** raw data into structured formats.
-- **Aggregating** data into dimensional and fact tables.
 
-The output is stored in a **DuckDB database** for analytics and visualization.
+The pipeline:
+- Ingests real-time bicycle station and city data
+- Transforms and structures the data into analytical tables
+- Stores results in a DuckDB database
+- Displays insights through an interactive Streamlit dashboard
 
 ---
 
 ## Project Structure
-- **data_ingestion.py**: Fetches data from external sources.
-- **data_consolidation.py**: Consolidates raw data into structured tables.
-- **data_agregation.py**: Creates dimensional and fact tables for analysis.
-- **main.py**: Orchestrates the entire ETL process.
+
+- **data_ingestion.py**: Fetches data from external APIs
+- **data_consolidation.py**: Cleans and structures raw data
+- **data_agregation.py**: Builds analytical tables (dimensions & facts)
+- **data_visualization.py**: Streamlit dashboard (maps, charts, KPIs)
+- **main.py**: Orchestrates the full pipeline (ETL + visualization)
 
 ---
 
 ## Installation
-1. Clone this repository:
+
+1. Clone the repository:
    ```bash
    git clone https://github.com/ynanangaa/Projet-ETL-velo-Data-Engineering.git
    cd Projet-ETL-velo-Data-Engineering
    ```
 
-2. Create a Python virtual environment:
-   ```bash
-   python -m venv .venv
-   ```
+2. Make sure **uv** is installed. If not:
 
-3. Activate the virtual environment:
-   - **On Windows:**
+   * **Linux / macOS**
+
      ```bash
-     .venv\Scripts\activate
-     ```
-   - **On macOS/Linux:**
-     ```bash
-     source venv/bin/activate
+     curl -LsSf https://astral.sh/uv/install.sh | sh
      ```
 
-4. Install dependencies:
-   ```bash
-   pip install -r requirements.txt
-   ```
+   * **Windows (PowerShell)**
 
-5. Ensure **DuckDB** is installed.
+     ```powershell
+     powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"
+     ```
+
+3. Create and sync the environment:
+
+   ```bash
+   uv sync
+   ```
 
 ---
 
 ## Usage
-Run the ETL pipeline using the `main.py` script:
+
+You can run the project in two ways:
+
+### Option 1 — Using uv (recommended)
+
 ```bash
-python src/main.py
+uv run streamlit run src/main.py
 ```
-The process includes:
-1. Ingesting data.
-2. Consolidating it into structured tables.
-3. Aggregating the data for analysis.
-
-Logs will indicate the progress of each phase.
-
-After running the ETL pipeline, you can perform SQL queries on the resulting **DuckDB database** to analyze the processed data. For example:
-
-- **Number of available bicycle docks in a city**:
-   ```sql
-   SELECT dm.NAME, tmp.SUM_BICYCLE_DOCKS_AVAILABLE
-   FROM DIM_CITY dm INNER JOIN (
-       SELECT CITY_ID, SUM(BICYCLE_DOCKS_AVAILABLE) AS SUM_BICYCLE_DOCKS_AVAILABLE
-       FROM FACT_STATION_STATEMENT
-       WHERE CREATED_DATE = (SELECT MAX(CREATED_DATE) FROM CONSOLIDATE_STATION)
-       GROUP BY CITY_ID
-   ) tmp ON dm.ID = tmp.CITY_ID
-   WHERE lower(dm.NAME) in ('paris', 'nantes', 'vincennes', 'toulouse', 'montpellier');
-   ```
-
-- **Average number of available bicycles at each station**:
-   ```sql
-   SELECT ds.name, ds.code, ds.address, tmp.avg_dock_available
-   FROM DIM_STATION ds JOIN (
-       SELECT station_id, AVG(BICYCLE_AVAILABLE) AS avg_dock_available
-       FROM FACT_STATION_STATEMENT
-       GROUP BY station_id
-   ) AS tmp ON ds.id = tmp.station_id;
-   ```
 
 ---
 
-## ETL Workflow
-1. **Data Ingestion**:
-   - Fetches real-time bicycle station data and city information.
-2. **Data Consolidation**:
-   - Combines and structures raw data into intermediate tables.
-3. **Data Aggregation**:
-   - Produces dimensional and fact tables for analysis.
+### Option 2 — Using the virtual environment
+
+1. Activate the virtual environment:
+
+* **Linux / macOS**
+
+  ```bash
+  source .venv/bin/activate
+  ```
+
+* **Windows**
+
+  ```bash
+  .venv\Scripts\activate
+  ```
+
+2. Run the application:
+
+```bash
+streamlit run src/main.py
+```
+
+---
+
+This will:
+
+1. Execute the full ETL pipeline (ingestion → consolidation → aggregation)
+2. Launch the interactive Streamlit dashboard
+
+---
+
+## Dashboard Features
+
+The Streamlit interface provides:
+
+* 📍 **Interactive map of bicycle stations**
+
+  * Location, capacity, and status filtering
+
+* 🏙️ **Available docks by city**
+
+  * Aggregated view for major French cities
+
+* 🚲 **Station analysis**
+
+  * Top stations with most bikes available
+  * Distribution of bike availability
+
+* 📊 **Key KPIs**
+
+  * Total stations
+  * Available docks
+  * Average bikes per station
+
+---
+
+## ETL Workflow (Simplified)
+
+1. **Ingestion**
+   Collects real-time station and city data
+
+2. **Consolidation**
+   Cleans and structures the raw data
+
+3. **Aggregation**
+   Builds analytical tables used by the dashboard
+
+---
