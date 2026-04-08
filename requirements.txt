@@ -1,0 +1,4 @@
+duckdb
+plotly
+requests
+streamlit
