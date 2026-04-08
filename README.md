@@ -26,31 +26,27 @@ The pipeline:
 
 ## Installation
 
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/ynanangaa/Projet-ETL-velo-Data-Engineering.git
-   cd Projet-ETL-velo-Data-Engineering
-   ```
+## Installation
 
-2. Make sure **uv** is installed. If not:
+Clone the repository and move into the project directory:
 
-   * **Linux / macOS**
+```bash
+git clone <repo-url>
+cd <repo-folder>
+```
 
-     ```bash
-     curl -LsSf https://astral.sh/uv/install.sh | sh
-     ```
+Install **uv** if not already available:
 
-   * **Windows (PowerShell)**
+```bash
+curl -LsSf https://astral.sh/uv/install.sh | sh
+```
+Documentation: https://docs.astral.sh/uv/
 
-     ```powershell
-     powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"
-     ```
+Sync the environment:
 
-3. Create and sync the environment:
-
-   ```bash
-   uv sync
-   ```
+```bash
+uv sync
+```
 
 ---
 
@@ -58,7 +54,7 @@ The pipeline:
 
 You can run the project in two ways:
 
-### Option 1 — Using uv (recommended)
+### Option 1 — Using uv
 
 ```bash
 uv run streamlit run src/main.py
@@ -66,27 +62,17 @@ uv run streamlit run src/main.py
 
 ---
 
-### Option 2 — Using the virtual environment
+### Option 2 — Using Docker
 
 1. Activate the virtual environment:
 
-* **Linux / macOS**
-
-  ```bash
-  source .venv/bin/activate
-  ```
-
-* **Windows**
-
-  ```bash
-  .venv\Scripts\activate
-  ```
-
-2. Run the application:
+Build and run the application:
 
 ```bash
-streamlit run src/main.py
+docker build -t <your-app-name> .
+docker run -p 8501:8501 <your-app-name>
 ```
+The app will be available at: http://localhost:8501
 
 ---
 
