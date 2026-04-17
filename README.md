@@ -69,8 +69,7 @@ uv run streamlit run src/main.py
 Build and run the application:
 
 ```bash
-docker build -t <your-app-name> .
-docker run -p 8501:8501 <your-app-name>
+docker compose up -d
 ```
 The app will be available at: http://localhost:8501
 
